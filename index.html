@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Tic Tac Toe</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div style="display: none;" id="divChoice">
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <button type="button" style="width: 180px">X</button>
+        <p/>
+        <button type="button" style="width: 180px">0</button>
+    </div>
+    <div style="display: block;" id="divCanvas">
+        <input type="text" name="txtCoord" id="txtCoord" /><br />
+        <canvas id="t3Canvas" name="t3Canvas" width="300" height="300" />
+    </div>
+    <script lang="javascript">
+        playGame();
+    </script>
+</body>
+</html>
