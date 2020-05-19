@@ -4,6 +4,7 @@ var gameStarted = false;
 var mouseFlag = 0; // If 1, then inside X. If 2, then inside O.
 var mouseButtonFlag = false; // Has the button been pressed?
 var playerIsX = false; // Is the player playing as X?
+var playerChoosingX = 0;  // 0 - nothing selected, X - 1, O - 2
 
 // What are the defined states for a square
 const squareStates = {
@@ -41,25 +42,42 @@ function renderChoice() {
 }
 
 function renderGrid() {
+
     var canvas = document.getElementById("t3Canvas");
     var context = canvas.getContext("2d");
+
+    console.log("playerIsX is " + playerIsX);
+
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    context.beginPath();
     context.moveTo(100, 0);
     context.lineTo(100, 300);
+    context.lineWidth = 2;
+    context.strokeStyle = '#888888';
     context.stroke();
 
+    context.beginPath();
     context.moveTo(200, 0);
     context.lineTo(200, 300);
+    context.lineWidth = 2;
+    context.strokeStyle = '#888888';
     context.stroke();
 
+    context.beginPath();
     context.moveTo(0, 100);
     context.lineTo(300, 100);
+    context.lineWidth = 2;
+    context.strokeStyle = '#888888';
     context.stroke();
 
+    context.beginPath();
     context.moveTo(0, 200);
     context.lineTo(300, 200);
+    context.lineWidth = 2;
+    context.strokeStyle = '#888888';
     context.stroke();
-
-
 }
 
 function doMouseMove(event) {
@@ -96,8 +114,12 @@ function doMouseMove(event) {
                     showORaised(canvas, context);
                 }
 
-                showXHighlighted(canvas, context);
-
+                if (mouseButtonFlag == true) {
+                    showXDepressed(canvas, context);
+                } else {
+                    showXHighlighted(canvas, context);
+                }
+          
                 mouseFlag = 1;
             }
         } else if ((canvas_x > 160) && (canvas_y > 100) &&
@@ -109,31 +131,36 @@ function doMouseMove(event) {
                     showXRaised(canvas, context);
                 }
 
-                showOHighlighted(canvas, context);
+                if (mouseButtonFlag == true) {
+                    showODepressed(canvas, context);
+                } else {
+                    showOHighlighted(canvas, context);
+                }
 
                 mouseFlag = 2;
             }
         } else if (mouseFlag == 1) {
+
           showXRaised(canvas, context);
           mouseFlag = 0;
         } else if (mouseFlag == 2) {
+
           showORaised(canvas, context);
           mouseFlag = 0;
         }
+    } else {
 
-        return;
-    }
+        if ((x_mod > 25) && (x_mod < 75) &&
+            (y_mod > 20) && (y_mod < 80)) {
 
-    if ((x_mod > 25) && (x_mod < 75) &&
-        (y_mod > 20) && (y_mod < 80)) {
+            var imageObj = new Image();
 
-        var imageObj = new Image();
+            imageObj.onload = function() {
+                context.drawImage(imageObj, x_offset * 100,  y_offset * 100);
+            };
 
-        imageObj.onload = function() {
-            context.drawImage(imageObj, x_offset * 100, y_offset * 100);
-        };
-
-        imageObj.src = 'o.svg';
+            imageObj.src = 'x.svg';
+        }
     }
 }
 
@@ -142,18 +169,48 @@ function doMouseDown(event) {
     var canvas = document.getElementById("t3Canvas");
     var context = canvas.getContext('2d');
 
-    if (!gameStarted) { 
+    if (!gameStarted) {
+
         if (mouseFlag == 1) {
+            playerChoosingX = 1;
             showXDepressed(canvas, context);
         } else if (mouseFlag == 2) {
+            playerChoosingX = 2;
             showODepressed(canvas, context);          
         }
 
         mouseButtonFlag = true;
+    } else {
+
     }
 }
 
 function doMouseUp(event) {
+
+    var canvas = document.getElementById("t3Canvas");
+    var context = canvas.getContext('2d');
+
+    if (!gameStarted) {
+
+        if ((mouseFlag == 1) && (playerChoosingX == 1)) {
+
+            gameStarted = true;
+            playerIsX = true;
+
+        } else if ((mouseFlag == 2) && (playerChoosingX == 2)) {
+
+            gameStarted = true;
+            playerIsX = false;
+        }
+
+        mouseButtonFlag = false;
+
+        if (gameStarted == true) {
+            renderGrid();
+        }
+    } else {
+
+    }
 }
 
 function showXRaised(canvas, context) {
